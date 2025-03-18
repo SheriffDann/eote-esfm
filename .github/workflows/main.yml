@@ -30,7 +30,7 @@
 #   - Has the module's entry on FoundryVTT's module administration site
 #     (https://foundryvtt.com/admin) been updated?
 #
-name: eote-esfm CI
+name: my-module CI
 
 on: [push]
 
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: zip -r ./eote-esfm.zip module.json eote.esfm.js lang/ templates/
+    - run: zip -r ./my-module.zip module.json my-module.js lang/ templates/
     - name: Create Release
       id: create_latest_release
       uses: ncipollo/release-action@v1
