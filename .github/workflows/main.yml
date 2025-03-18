@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Create Module Archive
-        run: zip -r ./eote-esfm-module.zip module.json my-module.js
+        run: zip -r ./module.zip module.json my-module.js
 
       - name: Create Release
         id: create_latest_release
