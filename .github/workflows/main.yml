@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - run: zip -r ./eote-esfm-module.zip module.json my-module.js lang/ templates/
+    - run: zip -r ./eote-esfm-module.zip module.json my-module.js
     - name: Create Release
       id: create_latest_release
       uses: ncipollo/release-action@v1
