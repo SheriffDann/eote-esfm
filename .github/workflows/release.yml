@@ -1,7 +1,7 @@
 name: Build & Release FoundryVTT Module
 
 permissions:
-  contents: write
+  contents: write  # Needed to push commits and create releases
 
 on:
   workflow_dispatch:
@@ -17,19 +17,29 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Update module.json version
+      - name: Update module.json version & download link
         run: |
           VERSION="${{ github.event.inputs.version }}"
           echo "Updating module.json to version $VERSION"
           jq --arg v "$VERSION" \
              --arg d "https://github.com/${{ github.repository }}/releases/download/$VERSION/module.zip" \
              '.version = $v | .download = $d' module.json > tmp.$$.json && mv tmp.$$.json module.json
+
+      - name: Commit updated module.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add module.json
+          git commit -m "chore: bump version to ${{ github.event.inputs.version }}"
+          git push origin HEAD:${{ github.ref_name }}
 
       - name: Create zip file
         run: |
