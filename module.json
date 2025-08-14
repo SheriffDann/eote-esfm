@@ -12,39 +12,41 @@
     "systems": [
       {
         "id": "starwarsffg",
-        "type": "system"
+        "type": "system",
+        "compatibility": {}
       }
     ]
   },
   "authors": [
     {
-      "name": "SheriffDann"
+      "name": "SheriffDann",
+      "flags": {}
     }
   ],
-"packs": [
-  {
-    "name": "eote-escape",
-    "label": "EOTE Escape",
-    "path": "packs/eote-escape",
-    "type": "JournalEntry",
-    "system": "starwarsffg",
-    "ownership": {
-      "PLAYER": "OBSERVER",
-      "ASSISTANT": "OWNER"
+  "packs": [
+    {
+      "name": "eote-escape",
+      "label": "EOTE Escape",
+      "path": "packs/eote-escape",
+      "type": "Adventure",
+      "system": "starwarsffg",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "eote-escape-scene",
+      "label": "EOTE Escape Scene",
+      "path": "packs/eote-escape-scene",
+      "type": "Scene",
+      "system": "starwarsffg",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
     }
-  },
-  {
-    "name": "eote-escape-scene",
-    "label": "EOTE Escape Scene",
-    "path": "packs/eote-escape-scene",
-    "type": "Scene",
-    "system": "starwarsffg",
-    "ownership": {
-      "PLAYER": "OBSERVER",
-      "ASSISTANT": "OWNER"
-    }
-  }
-],
-  "description": "An Escape from Mos Shuuta starter adventure for Star Wars FFG.",
+  ],
+  "description": "<p>An Escape from Mos Shuuta starter adventure for Star Wars FFG.</p>",
   "flags": {}
 }
