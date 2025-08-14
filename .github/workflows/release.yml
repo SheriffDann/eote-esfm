@@ -1,0 +1,45 @@
+name: Build & Release FoundryVTT Module
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version number (e.g., 1.0.2)"
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Update module.json version
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          echo "Updating module.json to version $VERSION"
+          jq --arg v "$VERSION" \
+             --arg d "https://github.com/${{ github.repository }}/releases/download/$VERSION/module.zip" \
+             '.version = $v | .download = $d' module.json > tmp.$$.json && mv tmp.$$.json module.json
+
+      - name: Create zip file
+        run: |
+          zip -r module.zip * -x "*.git*" -x "*.github*"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          name: "Release ${{ github.event.inputs.version }}"
+          body: "Auto-generated release for Foundry VTT"
+          files: |
+            module.zip
+            module.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
