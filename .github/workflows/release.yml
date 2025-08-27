@@ -1,10 +1,12 @@
-name: Auto-Bump & Release FoundryVTT Module
+name: Auto-Bump & Release FoundryVTT Module + GitHub Pages
 
 permissions:
-  contents: write  # Needed to push commits and create releases
+  contents: write
+  pages: write
+  id-token: write
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,7 +18,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install jq (for JSON editing)
+      - name: Install jq
         run: sudo apt-get install -y jq
 
       - name: Read and bump version
@@ -35,12 +37,12 @@ jobs:
              '.version = $v | .download = $d' module.json > tmp.$$.json && mv tmp.$$.json module.json
 
       - name: Commit updated module.json
-  run: |
-    git config user.name "github-actions[bot]"
-    git config user.email "github-actions[bot]@users.noreply.github.com"
-    git add module.json
-    git commit -m "chore: bump version to ${{ steps.bump.outputs.version }}" || echo "No changes to commit"
-    git push origin HEAD:${{ github.ref_name }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add module.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.version }}" || echo "No changes to commit"
+          git push origin HEAD:${{ github.ref_name }}
 
       - name: Create zip file
         run: |
@@ -57,3 +59,17 @@ jobs:
             module.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy manifest to GitHub Pages
+        run: |
+          mkdir pages
+          cp module.json pages/
+          cd pages
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add module.json
+          git commit -m "Deploy manifest version ${{ steps.bump.outputs.version }}"
+          git branch -M gh-pages
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git push -f origin gh-pages
